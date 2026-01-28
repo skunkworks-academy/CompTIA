@@ -1,0 +1,1321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CompTIA Linux+ Exam Readiness Tracker</title>
+  <meta name="description" content="Responsive CompTIA Linux+ readiness assessment with scoring, domain breakdown, and local progress tracking." />
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f1b33;
+      --panel2:#0c1630;
+      --text:#e8eefc;
+      --muted:#a9b7dd;
+      --line:rgba(255,255,255,.12);
+      --good:#4ade80;
+      --warn:#fbbf24;
+      --bad:#fb7185;
+      --accent:#60a5fa;
+      --accent2:#a78bfa;
+      --shadow: 0 12px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 12px;
+      --max: 1100px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      background: radial-gradient(1200px 600px at 20% -10%, rgba(96,165,250,.22), transparent 55%),
+                  radial-gradient(900px 500px at 95% 10%, rgba(167,139,250,.16), transparent 55%),
+                  linear-gradient(180deg, var(--bg), #070b14 70%);
+      color: var(--text);
+      min-height:100vh;
+    }
+    a{ color: var(--accent); text-decoration:none; }
+    a:hover{ text-decoration: underline; }
+
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(10px);
+      background: rgba(11,18,32,.72);
+      border-bottom: 1px solid var(--line);
+    }
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .topbar{
+      display:flex;
+      gap: 14px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap: wrap;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 240px;
+    }
+    .logo{
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,.35), transparent 55%),
+        linear-gradient(135deg, rgba(96,165,250,.95), rgba(167,139,250,.95));
+      box-shadow: var(--shadow);
+    }
+    .brand h1{
+      font-size: 16px;
+      margin:0;
+      letter-spacing: .2px;
+    }
+    .brand p{
+      margin:2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .pillrow{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .pill{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      padding: 8px 10px;
+      border-radius: 999px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .pill strong{ color: var(--text); font-weight: 600; }
+    .btn{
+      cursor:pointer;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 600;
+      letter-spacing: .2px;
+      transition: transform .04s ease, background .15s ease, border-color .15s ease;
+      user-select:none;
+    }
+    .btn:hover{ background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.18); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      border-color: rgba(96,165,250,.55);
+      background: linear-gradient(135deg, rgba(96,165,250,.34), rgba(167,139,250,.26));
+    }
+    .btn.danger{
+      border-color: rgba(251,113,133,.45);
+      background: rgba(251,113,133,.12);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 16px;
+      align-items:start;
+    }
+    @media (max-width: 920px){
+      .grid{ grid-template-columns: 1fr; }
+      .pillrow{ justify-content:flex-start; }
+    }
+
+    .card{
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.02);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .card .hd h2{
+      font-size: 14px;
+      margin:0;
+      color: var(--text);
+      letter-spacing: .2px;
+    }
+    .card .hd .sub{
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .card .bd{ padding: 14px; }
+
+    .row{
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items:center;
+    }
+    .field{
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 160px;
+      flex: 1 1 180px;
+    }
+    label{
+      font-size: 12px;
+      color: var(--muted);
+    }
+    select, input[type="number"], input[type="text"]{
+      width:100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline: none;
+    }
+    select:focus, input:focus{
+      border-color: rgba(96,165,250,.65);
+      box-shadow: 0 0 0 3px rgba(96,165,250,.20);
+    }
+
+    .muted{ color: var(--muted); }
+    .tiny{ font-size: 12px; }
+    .kpi{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 700px){
+      .kpi{ grid-template-columns: 1fr; }
+    }
+    .kpi .box{
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.14);
+      border-radius: var(--radius2);
+      padding: 12px;
+    }
+    .kpi .box .t{ font-size: 12px; color: var(--muted); }
+    .kpi .box .v{ font-size: 20px; font-weight: 750; margin-top: 6px; }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .badge.good{ border-color: rgba(74,222,128,.45); background: rgba(74,222,128,.12); }
+    .badge.warn{ border-color: rgba(251,191,36,.45); background: rgba(251,191,36,.12); }
+    .badge.bad{ border-color: rgba(251,113,133,.45); background: rgba(251,113,133,.12); }
+
+    .progress{
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+    }
+    .progress > div{
+      height:100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(96,165,250,.95), rgba(167,139,250,.95));
+      transition: width .25s ease;
+    }
+
+    .qbox{
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.14);
+      border-radius: var(--radius2);
+      padding: 14px;
+    }
+    .qmeta{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .domainTag{
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(96,165,250,.35);
+      background: rgba(96,165,250,.12);
+      color: var(--text);
+      font-weight: 700;
+    }
+    .qnum{ color: var(--muted); font-size: 12px; }
+    .qtext{
+      font-size: 16px;
+      line-height: 1.35;
+      margin: 8px 0 12px;
+      font-weight: 650;
+    }
+    .choices{
+      display:grid;
+      gap: 10px;
+    }
+    .choice{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius: 14px;
+      padding: 10px 12px;
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      cursor:pointer;
+      transition: background .12s ease, border-color .12s ease;
+    }
+    .choice:hover{
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.18);
+    }
+    .choice input{ margin-top: 3px; }
+    .choice.correct{ border-color: rgba(74,222,128,.45); background: rgba(74,222,128,.10); }
+    .choice.wrong{ border-color: rgba(251,113,133,.45); background: rgba(251,113,133,.10); }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      justify-content: space-between;
+    }
+    .actions .left, .actions .right{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th, td{
+      text-align:left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+    }
+    th{ color: var(--muted); font-weight: 700; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    .bars{ display:grid; gap: 10px; }
+    .barRow{
+      display:grid;
+      grid-template-columns: 1fr 2fr auto;
+      gap: 10px;
+      align-items:center;
+    }
+    .barLabel{ color: var(--muted); font-size: 12px; }
+    .bar{
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      overflow:hidden;
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(96,165,250,.95), rgba(167,139,250,.95));
+      transition: width .25s ease;
+    }
+    .barVal{ color: var(--muted); font-size: 12px; }
+
+    .notice{
+      border: 1px dashed rgba(255,255,255,.18);
+      background: rgba(255,255,255,.03);
+      border-radius: var(--radius2);
+      padding: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .hide{ display:none !important; }
+
+    .footer{
+      padding: 26px 0 40px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align:center;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>CompTIA Linux+ Readiness Tracker</h1>
+        <p>Practice • Score • Domain gaps • Local history</p>
+      </div>
+    </div>
+
+    <div class="pillrow">
+      <div class="pill"><span class="muted">Attempt:</span> <strong id="pillAttempt">—</strong></div>
+      <div class="pill"><span class="muted">Timer:</span> <strong id="pillTimer">—</strong></div>
+      <button class="btn" id="btnExport" type="button">Export</button>
+      <button class="btn" id="btnImport" type="button">Import</button>
+      <button class="btn danger" id="btnResetAll" type="button">Reset</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+    <!-- LEFT: Assessment -->
+    <section class="card" aria-label="Assessment">
+      <div class="hd">
+        <div>
+          <h2>Assessment Engine</h2>
+          <div class="sub">Randomized questions, timed mode, review mode, and readiness score.</div>
+        </div>
+        <div class="badge" id="readinessBadge">Not started</div>
+      </div>
+      <div class="bd">
+        <!-- Setup -->
+        <div id="setupPanel">
+          <div class="row">
+            <div class="field">
+              <label for="mode">Mode</label>
+              <select id="mode">
+                <option value="assessment">Assessment (random + scored)</option>
+                <option value="practice">Practice (domain-focused)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="count">Questions</label>
+              <select id="count">
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20" selected>20</option>
+                <option value="25">25</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="timed">Timed</label>
+              <select id="timed">
+                <option value="no" selected>No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="minutes">Time limit (min)</label>
+              <input id="minutes" type="number" min="5" max="180" value="45" />
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:12px">
+            <div class="field">
+              <label for="domain">Domain focus (Practice mode)</label>
+              <select id="domain">
+                <option value="ALL" selected>All domains</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="review">Show answers after each question</label>
+              <select id="review">
+                <option value="no" selected>No</option>
+                <option value="yes">Yes (review mode)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <button class="btn primary" id="btnStart" type="button">Start</button>
+            </div>
+          </div>
+
+          <div class="notice" style="margin-top:14px">
+            Tip: For a realistic Linux+ feel, run Assessment mode with 20–25 questions and Timed = Yes.
+            Your history is stored locally in your browser (Export if you want to move it).
+          </div>
+        </div>
+
+        <!-- Live quiz -->
+        <div id="quizPanel" class="hide">
+          <div class="row" style="justify-content:space-between; margin-bottom: 10px;">
+            <div style="flex: 1;">
+              <div class="progress" aria-label="Progress">
+                <div id="progressFill"></div>
+              </div>
+              <div class="tiny muted" style="margin-top:6px">
+                <span id="progressText">—</span>
+                <span class="mono" id="timerText" style="float:right"> </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="qbox">
+            <div class="qmeta">
+              <span class="domainTag" id="domainTag">—</span>
+              <span class="qnum" id="qnum">—</span>
+            </div>
+            <div class="qtext" id="qtext">—</div>
+            <div class="choices" id="choices"></div>
+
+            <div id="explainBox" class="notice hide" style="margin-top:12px"></div>
+
+            <div class="actions">
+              <div class="left">
+                <button class="btn" id="btnPrev" type="button">Prev</button>
+                <button class="btn" id="btnSkip" type="button">Skip</button>
+              </div>
+              <div class="right">
+                <button class="btn" id="btnEnd" type="button">End</button>
+                <button class="btn primary" id="btnNext" type="button">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div id="resultsPanel" class="hide">
+          <div class="kpi">
+            <div class="box">
+              <div class="t">Score</div>
+              <div class="v" id="resScore">—</div>
+              <div class="tiny muted" id="resScoreNote">—</div>
+            </div>
+            <div class="box">
+              <div class="t">Readiness</div>
+              <div class="v" id="resReadiness">—</div>
+              <div class="tiny muted" id="resReadinessNote">—</div>
+            </div>
+            <div class="box">
+              <div class="t">Time</div>
+              <div class="v" id="resTime">—</div>
+              <div class="tiny muted" id="resTimeNote">—</div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px" class="card" aria-label="Domain breakdown">
+            <div class="hd">
+              <div>
+                <h2>Domain Breakdown</h2>
+                <div class="sub">Where you’re strong vs where you leak points.</div>
+              </div>
+            </div>
+            <div class="bd">
+              <div class="bars" id="domainBars"></div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px" class="notice" id="recommendations">
+            —
+          </div>
+
+          <div class="actions" style="margin-top:12px">
+            <div class="left">
+              <button class="btn" id="btnReviewMissed" type="button">Review Missed</button>
+            </div>
+            <div class="right">
+              <button class="btn" id="btnBackHome" type="button">Back</button>
+              <button class="btn primary" id="btnRetake" type="button">Retake</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: History + Stats -->
+    <aside class="card" aria-label="History">
+      <div class="hd">
+        <div>
+          <h2>Progress Dashboard</h2>
+          <div class="sub">Your last attempts, trend, and best score.</div>
+        </div>
+      </div>
+      <div class="bd">
+        <div class="kpi" style="grid-template-columns: repeat(2,1fr);">
+          <div class="box">
+            <div class="t">Best score</div>
+            <div class="v" id="bestScore">—</div>
+          </div>
+          <div class="box">
+            <div class="t">Last score</div>
+            <div class="v" id="lastScore">—</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px" class="notice">
+          Readiness bands (rough but useful):
+          <div style="margin-top:6px">
+            <span class="badge good">Ready ≥ 85%</span>
+            <span class="badge warn">Close 70–84%</span>
+            <span class="badge bad">Not yet &lt; 70%</span>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <table aria-label="Attempt history">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Mode</th>
+                <th>Score</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="historyRows"></tbody>
+          </table>
+        </div>
+
+        <div style="margin-top:12px" class="tiny muted">
+          Data is stored in your browser (localStorage). Use Export/Import to move it between machines.
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div class="footer">
+    Built for quick self-assessment. For real Linux+ prep: do labs, not just quizzes.
+  </div>
+</main>
+
+<script>
+(() => {
+  // -----------------------------
+  // Question Bank (tagged domains)
+  // -----------------------------
+  const BANK = [
+    // System Management
+    { id:"SYS-01", domain:"System Management", q:"Which command displays the kernel version and architecture in one line?", c:["uname -a","kernelctl status","sysinfo --all","lsmod -v"], a:0, exp:"uname -a prints kernel release, machine arch, and more." },
+    { id:"SYS-02", domain:"System Management", q:"Which systemd command shows logs for a service named nginx?", c:["systemctl log nginx","journalctl -u nginx","dmesg -u nginx","logctl --service nginx"], a:1, exp:"journalctl -u <unit> queries the systemd journal for that unit." },
+    { id:"SYS-03", domain:"System Management", q:"Where is a service restart policy most likely configured in systemd?", c:["/etc/sysctl.conf","The unit file (Restart=)","/etc/fstab","/etc/cron.d/"], a:1, exp:"Restart= lives in the service unit definition." },
+    { id:"SYS-04", domain:"System Management", q:"Which command changes the systemd boot target to multi-user (CLI) by default?", c:["systemctl set-default multi-user.target","systemctl default multi-user","systemctl enable multi-user","initctl set multi-user"], a:0, exp:"set-default changes the default target symlink." },
+    { id:"SYS-05", domain:"System Management", q:"Which command shows system boot messages from the current boot in journalctl?", c:["journalctl -b","journalctl --boot=all","journalctl -k","dmesg -b"], a:0, exp:"journalctl -b shows messages from the current boot." },
+
+    // Users & Permissions
+    { id:"UP-01", domain:"Users & Permissions", q:"A file has permissions -rwsr-xr-x. What does 's' in the user execute position mean?", c:["Sticky bit set","Setuid set","Setgid set","SELinux enforcing"], a:1, exp:"Setuid means the program runs with file owner's effective UID." },
+    { id:"UP-02", domain:"Users & Permissions", q:"Which command adds a new user alex with a home directory and Bash as login shell?", c:["useradd -m -s /bin/bash alex","adduser --shell /bash alex","usermod -a -m alex","mkuser -h /home/alex -s bash alex"], a:0, exp:"useradd -m creates home; -s sets the login shell." },
+    { id:"UP-03", domain:"Users & Permissions", q:"Which file controls sudo privileges and should be edited with visudo?", c:["/etc/passwd","/etc/shadow","/etc/sudoers","/etc/profile"], a:2, exp:"Use visudo to safely edit /etc/sudoers." },
+    { id:"UP-04", domain:"Users & Permissions", q:"Which command changes ownership of /srv/app to user 'app' and group 'app' recursively?", c:["chmod -R app:app /srv/app","chown -R app:app /srv/app","usermod -R app:app /srv/app","setfacl -R app:app /srv/app"], a:1, exp:"chown changes owner/group; -R applies recursively." },
+    { id:"UP-05", domain:"Users & Permissions", q:"What umask value would produce default permissions of 644 for new files?", c:["022","002","077","027"], a:0, exp:"New file base is 666; 666-022 => 644." },
+
+    // Filesystems & Storage
+    { id:"FS-01", domain:"Filesystems & Storage", q:"What does: tar -czf backup.tgz /home/user do?", c:["Creates gzip-compressed tar archive","Extracts gzip-compressed tar archive","Creates bzip2 tar archive","Creates uncompressed tar"], a:0, exp:"c=create, z=gzip, f=filename." },
+    { id:"FS-02", domain:"Filesystems & Storage", q:"Which command lists mounted filesystems and their usage in a human-readable format?", c:["du -sh","df -h","lsblk -f","mount -l"], a:1, exp:"df -h shows filesystem usage by mountpoint." },
+    { id:"FS-03", domain:"Filesystems & Storage", q:"Which file contains static filesystem mount definitions for boot-time mounting?", c:["/etc/fstab","/etc/mtab","/etc/exports","/etc/fuse.conf"], a:0, exp:"/etc/fstab defines mounts (device/UUID, mountpoint, fs type, options)." },
+    { id:"FS-04", domain:"Filesystems & Storage", q:"Which command finds files under /var/log modified in the last 2 days?", c:["find /var/log -type f -mtime -2","locate -mtime 2 /var/log","grep -R \"-2\" /var/log","stat --since 2d /var/log"], a:0, exp:"find with -mtime -2 means modified within last 2*24 hours." },
+    { id:"FS-05", domain:"Filesystems & Storage", q:"What is the purpose of swap space?", c:["Store logs permanently","Provide virtual memory backing when RAM is constrained","Encrypt disk by default","Accelerate CPU scheduling"], a:1, exp:"Swap extends memory capacity (at a performance cost) and helps with hibernation." },
+
+    // Networking
+    { id:"NET-01", domain:"Networking", q:"Which ip command shows IP addresses assigned to all interfaces?", c:["ip addr show","ip route list","ip link show","ip neigh show"], a:0, exp:"ip addr shows assigned addresses." },
+    { id:"NET-02", domain:"Networking", q:"Which command displays the routing table using modern tooling?", c:["route -n","ip route","netstat -r","ifroute --show"], a:1, exp:"ip route is the modern replacement for route." },
+    { id:"NET-03", domain:"Networking", q:"Which file typically configures DNS resolver settings on many systems (if not managed by other services)?", c:["/etc/hosts","/etc/resolv.conf","/etc/nsswitch.conf","/etc/dns.conf"], a:1, exp:"/etc/resolv.conf contains nameserver and search directives." },
+    { id:"NET-04", domain:"Networking", q:"Which tool captures network packets for troubleshooting?", c:["tcpdump","ps","top","chage"], a:0, exp:"tcpdump captures packets; Wireshark is GUI counterpart." },
+    { id:"NET-05", domain:"Networking", q:"Which command tests TCP connectivity to host example.com on port 443 (common choice)?", c:["curl -I https://example.com","ping -p 443 example.com","nc -vz example.com 443","ip test example.com 443"], a:2, exp:"nc (netcat) with -vz checks TCP connect (verbose, zero-I/O)." },
+
+    // Security
+    { id:"SEC-01", domain:"Security", q:"Which tool commonly manages persistent firewall rules and integrates with nftables on many distros?", c:["firewalld","netstat","strace","lsof"], a:0, exp:"firewalld manages zones/rules; backend often nftables." },
+    { id:"SEC-02", domain:"Security", q:"What does SELinux primarily provide?", c:["Disk compression","Mandatory Access Control (MAC)","Kernel upgrades","Password hashing"], a:1, exp:"SELinux enforces MAC policies beyond traditional DAC permissions." },
+    { id:"SEC-03", domain:"Security", q:"Which command generates an SSH keypair using Ed25519?", c:["ssh-keygen -t ed25519","ssh-keygen --rsa 4096","ssh-keyadd -t ed25519","sshgen -ed25519"], a:0, exp:"ssh-keygen -t ed25519 creates an Ed25519 key." },
+    { id:"SEC-04", domain:"Security", q:"Which file stores hashed user passwords on Linux?", c:["/etc/passwd","/etc/shadow","/etc/group","/etc/login.defs"], a:1, exp:"/etc/shadow stores password hashes and aging data." },
+    { id:"SEC-05", domain:"Security", q:"Which option on chmod sets the sticky bit on a directory?", c:["chmod +s dir","chmod +t dir","chmod +g dir","chmod +u dir"], a:1, exp:"Sticky bit (+t) restricts delete/rename in shared directories like /tmp." },
+
+    // Scripting & Automation
+    { id:"SCR-01", domain:"Scripting & Automation", q:"In Bash, which variable expands to the exit status of the last command?", c:["$0","$?","$$","$!"], a:1, exp:"$? is the last command's exit code." },
+    { id:"SCR-02", domain:"Scripting & Automation", q:"Which cron expression runs a job at 03:15 every day?", c:["15 3 * * *","3 15 * * *","* 3 15 * *","15 * 3 * *"], a:0, exp:"Minute Hour Day Month Weekday => 15 3 * * *." },
+    { id:"SCR-03", domain:"Scripting & Automation", q:"Which tool schedules one-time jobs for later execution?", c:["cron","at","systemctl","nohup"], a:1, exp:"at schedules one-off tasks; cron is recurring." },
+    { id:"SCR-04", domain:"Scripting & Automation", q:"What does 'set -e' generally do in a Bash script?", c:["Prints commands before executing","Exits on command failure","Enables job control","Forces interactive shell"], a:1, exp:"set -e exits the script when a command returns non-zero (with caveats)." },
+    { id:"SCR-05", domain:"Scripting & Automation", q:"Which command pipes stdout of cmdA into cmdB?", c:["cmdA > cmdB","cmdA | cmdB","cmdA < cmdB","cmdA & cmdB"], a:1, exp:"| sends stdout of left command into stdin of right command." },
+  ];
+
+  // -----------------------------
+  // State & Storage
+  // -----------------------------
+  const STORE_KEY = "linuxplus_readiness_v1";
+
+  const $ = (id) => document.getElementById(id);
+
+  const els = {
+    setupPanel: $("setupPanel"),
+    quizPanel: $("quizPanel"),
+    resultsPanel: $("resultsPanel"),
+
+    mode: $("mode"),
+    count: $("count"),
+    timed: $("timed"),
+    minutes: $("minutes"),
+    domain: $("domain"),
+    review: $("review"),
+
+    btnStart: $("btnStart"),
+    btnPrev: $("btnPrev"),
+    btnNext: $("btnNext"),
+    btnSkip: $("btnSkip"),
+    btnEnd: $("btnEnd"),
+    btnBackHome: $("btnBackHome"),
+    btnRetake: $("btnRetake"),
+    btnReviewMissed: $("btnReviewMissed"),
+
+    qtext: $("qtext"),
+    choices: $("choices"),
+    qnum: $("qnum"),
+    domainTag: $("domainTag"),
+
+    progressFill: $("progressFill"),
+    progressText: $("progressText"),
+    timerText: $("timerText"),
+
+    readinessBadge: $("readinessBadge"),
+
+    resScore: $("resScore"),
+    resScoreNote: $("resScoreNote"),
+    resReadiness: $("resReadiness"),
+    resReadinessNote: $("resReadinessNote"),
+    resTime: $("resTime"),
+    resTimeNote: $("resTimeNote"),
+    domainBars: $("domainBars"),
+    recommendations: $("recommendations"),
+
+    historyRows: $("historyRows"),
+    bestScore: $("bestScore"),
+    lastScore: $("lastScore"),
+
+    pillAttempt: $("pillAttempt"),
+    pillTimer: $("pillTimer"),
+
+    explainBox: $("explainBox"),
+
+    btnExport: $("btnExport"),
+    btnImport: $("btnImport"),
+    btnResetAll: $("btnResetAll"),
+  };
+
+  const State = {
+    session: null,     // active quiz session
+    history: [],       // attempt history array
+  };
+
+  function loadStore(){
+    try{
+      const raw = localStorage.getItem(STORE_KEY);
+      if(!raw) return;
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed.history)) State.history = parsed.history;
+    } catch(e){
+      console.warn("Failed to load store:", e);
+    }
+  }
+
+  function saveStore(){
+    localStorage.setItem(STORE_KEY, JSON.stringify({ history: State.history }));
+  }
+
+  function formatDate(ts){
+    const d = new Date(ts);
+    return d.toLocaleString();
+  }
+
+  function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
+
+  function readinessFromPct(pct){
+    if(pct >= 85) return { band:"Ready", cls:"good", note:"You’re in the safe zone. Focus on speed + tricky edge cases." };
+    if(pct >= 70) return { band:"Close", cls:"warn", note:"You’re close. Drill weak domains and do more hands-on labs." };
+    return { band:"Not yet", cls:"bad", note:"Build fundamentals and practice in a terminal. Quizzes alone won’t save you." };
+  }
+
+  function secondsToMmSs(sec){
+    const m = Math.floor(sec/60);
+    const s = sec % 60;
+    return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  }
+
+  // -----------------------------
+  // Build domain dropdown
+  // -----------------------------
+  function populateDomains(){
+    const domains = Array.from(new Set(BANK.map(x => x.domain))).sort();
+    domains.forEach(d => {
+      const opt = document.createElement("option");
+      opt.value = d;
+      opt.textContent = d;
+      els.domain.appendChild(opt);
+    });
+  }
+
+  // -----------------------------
+  // Session creation
+  // -----------------------------
+  function pickQuestions({mode, count, domain}){
+    let pool = BANK.slice();
+    if(mode === "practice" && domain && domain !== "ALL"){
+      pool = pool.filter(q => q.domain === domain);
+    }
+    // Shuffle
+    for(let i=pool.length-1; i>0; i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return pool.slice(0, count);
+  }
+
+  function startSession(){
+    const mode = els.mode.value;
+    const count = parseInt(els.count.value, 10);
+    const timed = els.timed.value === "yes";
+    const minutes = clamp(parseInt(els.minutes.value, 10) || 45, 5, 180);
+    const domain = els.domain.value;
+    const review = els.review.value === "yes";
+
+    const questions = pickQuestions({mode, count, domain});
+    if(questions.length === 0){
+      alert("No questions available for that domain selection.");
+      return;
+    }
+
+    State.session = {
+      id: `sess_${Date.now()}`,
+      mode, domain,
+      timed, minutes,
+      review,
+      questions,
+      idx: 0,
+      answers: new Array(questions.length).fill(null), // selected choice index
+      startedAt: Date.now(),
+      endedAt: null,
+      timer: {
+        remainingSec: timed ? minutes*60 : null,
+        intervalId: null,
+      },
+      reviewingMissed: false,
+      missedOnlyIdxs: [],
+    };
+
+    // UI switch
+    els.setupPanel.classList.add("hide");
+    els.resultsPanel.classList.add("hide");
+    els.quizPanel.classList.remove("hide");
+    els.explainBox.classList.add("hide");
+
+    // Header pills
+    els.pillAttempt.textContent = mode === "practice" ? "Practice" : "Assessment";
+    els.pillTimer.textContent = timed ? `${minutes} min` : "Off";
+
+    // Start timer if needed
+    if(State.session.timed){
+      startTimer();
+    } else {
+      els.timerText.textContent = "";
+    }
+
+    renderQuestion();
+  }
+
+  function startTimer(){
+    const s = State.session;
+    if(!s || !s.timed) return;
+
+    if(s.timer.intervalId) clearInterval(s.timer.intervalId);
+    s.timer.intervalId = setInterval(() => {
+      s.timer.remainingSec -= 1;
+      const r = s.timer.remainingSec;
+      els.timerText.textContent = `Time left: ${secondsToMmSs(Math.max(0,r))}`;
+      els.pillTimer.textContent = secondsToMmSs(Math.max(0,r));
+
+      if(r <= 0){
+        clearInterval(s.timer.intervalId);
+        s.timer.intervalId = null;
+        endSession(true);
+      }
+    }, 1000);
+
+    els.timerText.textContent = `Time left: ${secondsToMmSs(s.timer.remainingSec)}`;
+  }
+
+  // -----------------------------
+  // Rendering
+  // -----------------------------
+  function renderQuestion(){
+    const s = State.session;
+    if(!s) return;
+
+    // Determine the active question index list (normal vs missed review)
+    const total = s.reviewingMissed ? s.missedOnlyIdxs.length : s.questions.length;
+    const realIdx = s.reviewingMissed ? s.missedOnlyIdxs[s.idx] : s.idx;
+
+    const q = s.questions[realIdx];
+    els.domainTag.textContent = q.domain;
+    els.qnum.textContent = `Question ${s.idx + 1} of ${total}`;
+    els.qtext.textContent = q.q;
+
+    // progress
+    const pct = ((s.idx) / total) * 100;
+    els.progressFill.style.width = `${pct}%`;
+    els.progressText.textContent = `${s.idx}/${total} completed`;
+
+    // choices
+    els.choices.innerHTML = "";
+    const selected = s.answers[realIdx];
+
+    q.c.forEach((choiceText, i) => {
+      const row = document.createElement("label");
+      row.className = "choice";
+      row.setAttribute("role", "radio");
+      row.setAttribute("aria-checked", selected === i ? "true" : "false");
+
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "choice";
+      input.value = i;
+      input.checked = selected === i;
+
+      const text = document.createElement("div");
+      text.textContent = choiceText;
+
+      row.appendChild(input);
+      row.appendChild(text);
+
+      row.addEventListener("click", (e) => {
+        e.preventDefault();
+        setAnswer(i);
+      });
+
+      els.choices.appendChild(row);
+    });
+
+    // review explain
+    els.explainBox.classList.add("hide");
+    if(s.review){
+      showExplain(realIdx);
+    }
+
+    // button enablement
+    els.btnPrev.disabled = s.idx === 0;
+    els.btnNext.textContent = (s.idx === total - 1) ? "Finish" : "Next";
+  }
+
+  function setAnswer(choiceIdx){
+    const s = State.session;
+    if(!s) return;
+
+    const realIdx = s.reviewingMissed ? s.missedOnlyIdxs[s.idx] : s.idx;
+    s.answers[realIdx] = choiceIdx;
+
+    // update UI selection
+    const nodes = Array.from(els.choices.querySelectorAll(".choice"));
+    nodes.forEach((n, i) => {
+      const radio = n.querySelector("input");
+      radio.checked = (i === choiceIdx);
+      n.setAttribute("aria-checked", i === choiceIdx ? "true" : "false");
+      n.classList.remove("correct","wrong");
+    });
+
+    if(s.review){
+      showExplain(realIdx);
+    }
+  }
+
+  function showExplain(realIdx){
+    const s = State.session;
+    const q = s.questions[realIdx];
+    const selected = s.answers[realIdx];
+
+    // decorate choices
+    const nodes = Array.from(els.choices.querySelectorAll(".choice"));
+    nodes.forEach((n, i) => {
+      n.classList.remove("correct","wrong");
+      if(i === q.a) n.classList.add("correct");
+      if(selected !== null && i === selected && selected !== q.a) n.classList.add("wrong");
+    });
+
+    const correctText = q.c[q.a];
+    const chosenText = (selected === null) ? "(no answer)" : q.c[selected];
+    els.explainBox.textContent =
+      `Correct: ${correctText} | Your answer: ${chosenText} | Why: ${q.exp}`;
+    els.explainBox.classList.remove("hide");
+  }
+
+  // -----------------------------
+  // Navigation
+  // -----------------------------
+  function next(){
+    const s = State.session;
+    if(!s) return;
+
+    const total = s.reviewingMissed ? s.missedOnlyIdxs.length : s.questions.length;
+
+    if(s.idx >= total - 1){
+      endSession(false);
+      return;
+    }
+    s.idx += 1;
+    renderQuestion();
+  }
+
+  function prev(){
+    const s = State.session;
+    if(!s) return;
+    if(s.idx === 0) return;
+    s.idx -= 1;
+    renderQuestion();
+  }
+
+  function skip(){
+    const s = State.session;
+    if(!s) return;
+    next();
+  }
+
+  // -----------------------------
+  // Scoring + results
+  // -----------------------------
+  function computeResults(){
+    const s = State.session;
+    const qs = s.questions;
+
+    let correct = 0;
+    const domainStats = {}; // domain -> {correct, total}
+    const missed = [];
+
+    qs.forEach((q, i) => {
+      if(!domainStats[q.domain]) domainStats[q.domain] = { correct:0, total:0 };
+      domainStats[q.domain].total += 1;
+
+      const ans = s.answers[i];
+      const ok = (ans === q.a);
+      if(ok){
+        correct += 1;
+        domainStats[q.domain].correct += 1;
+      } else {
+        missed.push(i);
+      }
+    });
+
+    const total = qs.length;
+    const pct = Math.round((correct / total) * 100);
+
+    const elapsedSec = Math.max(0, Math.round((Date.now() - s.startedAt)/1000));
+    const timeUsed = secondsToMmSs(elapsedSec);
+
+    return { correct, total, pct, domainStats, missed, elapsedSec, timeUsed };
+  }
+
+  function endSession(autoByTimer){
+    const s = State.session;
+    if(!s) return;
+
+    s.endedAt = Date.now();
+    if(s.timer.intervalId){
+      clearInterval(s.timer.intervalId);
+      s.timer.intervalId = null;
+    }
+
+    const res = computeResults();
+    const band = readinessFromPct(res.pct);
+
+    // Store attempt
+    const attempt = {
+      ts: Date.now(),
+      mode: s.mode,
+      domain: s.domain,
+      timed: s.timed,
+      minutes: s.minutes,
+      review: s.review,
+      scorePct: res.pct,
+      correct: res.correct,
+      total: res.total,
+      elapsedSec: res.elapsedSec,
+    };
+    State.history.unshift(attempt);
+    State.history = State.history.slice(0, 25); // keep last 25
+    saveStore();
+
+    // UI results
+    els.quizPanel.classList.add("hide");
+    els.setupPanel.classList.add("hide");
+    els.resultsPanel.classList.remove("hide");
+
+    els.resScore.textContent = `${res.pct}%`;
+    els.resScoreNote.textContent = `${res.correct}/${res.total} correct`;
+
+    els.resReadiness.textContent = band.band;
+    els.resReadinessNote.textContent = band.note;
+
+    els.resTime.textContent = res.timeUsed;
+    els.resTimeNote.textContent = (s.timed ? `Limit: ${s.minutes} min` : "Untimed") + (autoByTimer ? " • Auto-finished" : "");
+
+    // Readiness badge in header
+    els.readinessBadge.className = `badge ${band.cls}`;
+    els.readinessBadge.textContent = `${band.band} • ${res.pct}%`;
+
+    // Domain bars
+    renderDomainBars(res.domainStats);
+
+    // Recommendations
+    els.recommendations.textContent = buildRecommendations(res.domainStats, res.pct);
+
+    // Prepare missed review
+    s.reviewingMissed = false;
+    s.missedOnlyIdxs = res.missed;
+
+    // Update dashboard
+    renderHistory();
+  }
+
+  function renderDomainBars(domainStats){
+    const domains = Object.keys(domainStats).sort();
+    els.domainBars.innerHTML = "";
+
+    domains.forEach(d => {
+      const {correct, total} = domainStats[d];
+      const pct = total ? Math.round((correct/total)*100) : 0;
+
+      const row = document.createElement("div");
+      row.className = "barRow";
+
+      const label = document.createElement("div");
+      label.className = "barLabel";
+      label.textContent = d;
+
+      const bar = document.createElement("div");
+      bar.className = "bar";
+      const fill = document.createElement("div");
+      fill.style.width = `${pct}%`;
+      bar.appendChild(fill);
+
+      const val = document.createElement("div");
+      val.className = "barVal mono";
+      val.textContent = `${pct}% (${correct}/${total})`;
+
+      row.appendChild(label);
+      row.appendChild(bar);
+      row.appendChild(val);
+      els.domainBars.appendChild(row);
+    });
+  }
+
+  function buildRecommendations(domainStats, overallPct){
+    // Pick weakest 2 domains by percent (min total 2 questions)
+    const rows = Object.entries(domainStats).map(([d, st]) => {
+      const pct = st.total ? (st.correct/st.total)*100 : 0;
+      return { d, pct: Math.round(pct), total: st.total };
+    }).filter(x => x.total >= 2);
+
+    rows.sort((a,b) => a.pct - b.pct);
+    const weak = rows.slice(0, 2);
+
+    const band = readinessFromPct(overallPct);
+
+    let text = `${band.band} (${overallPct}%). `;
+    if(weak.length){
+      text += `Priority domains: ${weak.map(x => `${x.d} (${x.pct}%)`).join(", ")}. `;
+    } else {
+      text += `Priority domains: keep rotating through all domains. `;
+    }
+
+    text += "Next step suggestions: ";
+    if(overallPct < 70){
+      text += "do hands-on labs daily (users/permissions, systemd logs, networking), then retake a timed 20-question assessment.";
+    } else if(overallPct < 85){
+      text += "target weak domains with practice mode, then run timed assessments back-to-back (20–25 Q) to build speed.";
+    } else {
+      text += "focus on tricky edge cases (SELinux contexts, systemd unit options, networking troubleshooting) and keep your timing sharp.";
+    }
+    return text;
+  }
+
+  // -----------------------------
+  // History dashboard
+  // -----------------------------
+  function renderHistory(){
+    const hist = State.history;
+    els.historyRows.innerHTML = "";
+
+    if(hist.length === 0){
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 4;
+      td.className = "muted";
+      td.textContent = "No attempts yet. Start an assessment to build your trend.";
+      tr.appendChild(td);
+      els.historyRows.appendChild(tr);
+
+      els.bestScore.textContent = "—";
+      els.lastScore.textContent = "—";
+      els.pillAttempt.textContent = "—";
+      els.pillTimer.textContent = "—";
+      els.readinessBadge.className = "badge";
+      els.readinessBadge.textContent = "Not started";
+      return;
+    }
+
+    const best = Math.max(...hist.map(h => h.scorePct));
+    const last = hist[0].scorePct;
+    els.bestScore.textContent = `${best}%`;
+    els.lastScore.textContent = `${last}%`;
+
+    hist.slice(0, 8).forEach(h => {
+      const tr = document.createElement("tr");
+      const tdDate = document.createElement("td");
+      const tdMode = document.createElement("td");
+      const tdScore = document.createElement("td");
+      const tdTime = document.createElement("td");
+
+      tdDate.textContent = new Date(h.ts).toLocaleDateString() + " " + new Date(h.ts).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+      tdMode.textContent = h.mode === "practice" ? "Practice" : "Assess";
+      tdScore.textContent = `${h.scorePct}%`;
+      tdTime.textContent = secondsToMmSs(h.elapsedSec);
+
+      tr.appendChild(tdDate);
+      tr.appendChild(tdMode);
+      tr.appendChild(tdScore);
+      tr.appendChild(tdTime);
+      els.historyRows.appendChild(tr);
+    });
+
+    // Header badge reflect last attempt (nice feedback loop)
+    const band = readinessFromPct(last);
+    els.readinessBadge.className = `badge ${band.cls}`;
+    els.readinessBadge.textContent = `${band.band} • ${last}%`;
+  }
+
+  // -----------------------------
+  // Export / Import / Reset
+  // -----------------------------
+  function exportData(){
+    const payload = { version: 1, exportedAt: Date.now(), history: State.history };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `linuxplus-readiness-export-${Date.now()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  function importData(){
+    const inp = document.createElement("input");
+    inp.type = "file";
+    inp.accept = "application/json";
+    inp.addEventListener("change", async () => {
+      const file = inp.files && inp.files[0];
+      if(!file) return;
+      try{
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        if(!parsed || !Array.isArray(parsed.history)) throw new Error("Invalid export format.");
+        State.history = parsed.history;
+        saveStore();
+        renderHistory();
+        alert("Import complete.");
+      } catch(e){
+        alert("Import failed: " + e.message);
+      }
+    });
+    inp.click();
+  }
+
+  function resetAll(){
+    if(!confirm("Reset all stored attempts and progress?")) return;
+    State.history = [];
+    saveStore();
+    renderHistory();
+    // reset UI to home
+    State.session = null;
+    els.quizPanel.classList.add("hide");
+    els.resultsPanel.classList.add("hide");
+    els.setupPanel.classList.remove("hide");
+  }
+
+  // -----------------------------
+  // Results actions
+  // -----------------------------
+  function backHome(){
+    State.session = null;
+    els.quizPanel.classList.add("hide");
+    els.resultsPanel.classList.add("hide");
+    els.setupPanel.classList.remove("hide");
+  }
+
+  function retake(){
+    // Keep current setup selections; just start anew
+    State.session = null;
+    startSession();
+  }
+
+  function reviewMissed(){
+    const s = State.session;
+    if(!s) return;
+
+    if(!Array.isArray(s.missedOnlyIdxs) || s.missedOnlyIdxs.length === 0){
+      alert("No missed questions to review. Nice work.");
+      return;
+    }
+
+    // Switch to quiz panel in review-missed mode
+    s.reviewingMissed = true;
+    s.idx = 0;
+    s.review = true; // force show answers
+    els.resultsPanel.classList.add("hide");
+    els.quizPanel.classList.remove("hide");
+    els.explainBox.classList.remove("hide");
+    renderQuestion();
+  }
+
+  // -----------------------------
+  // Wiring events
+  // -----------------------------
+  els.btnStart.addEventListener("click", startSession);
+  els.btnNext.addEventListener("click", next);
+  els.btnPrev.addEventListener("click", prev);
+  els.btnSkip.addEventListener("click", skip);
+  els.btnEnd.addEventListener("click", () => endSession(false));
+  els.btnBackHome.addEventListener("click", backHome);
+  els.btnRetake.addEventListener("click", retake);
+  els.btnReviewMissed.addEventListener("click", reviewMissed);
+
+  els.btnExport.addEventListener("click", exportData);
+  els.btnImport.addEventListener("click", importData);
+  els.btnResetAll.addEventListener("click", resetAll);
+
+  // Enable/disable domain selection based on mode
+  els.mode.addEventListener("change", () => {
+    const isPractice = els.mode.value === "practice";
+    els.domain.disabled = !isPractice;
+  });
+
+  // Enable/disable minutes based on timed
+  els.timed.addEventListener("change", () => {
+    const isTimed = els.timed.value === "yes";
+    els.minutes.disabled = !isTimed;
+  });
+
+  // -----------------------------
+  // Init
+  // -----------------------------
+  populateDomains();
+  loadStore();
+  renderHistory();
+
+  // default disables
+  els.domain.disabled = true;
+  els.minutes.disabled = true;
+
+})();
+</script>
+</body>
+</html>
